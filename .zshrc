@@ -1,17 +1,16 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+########################################
+# Powerlevel10k Instant Prompt (TOP)
+########################################
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Path to your oh-my-zsh installation
+########################################
+# Oh My Zsh Base
+########################################
 export ZSH="$HOME/.oh-my-zsh"
-
-# Use Powerlevel10k theme
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# Enable plugins
 plugins=(
   git
   sudo
@@ -23,30 +22,43 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# >>> zoxide initialization >>>
+########################################
+# Core Tooling (order matters)
+########################################
+
+# zoxide (must be after OMZ)
 eval "$(zoxide init zsh)"
-# <<< zoxide initialization <<<
+# Better zoxide completion behavior
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
-# >>> direnv initialization >>>
+# direnv
 eval "$(direnv hook zsh)"
-# <<< direnv initialization <<<
 
-# >>> fzf initialization >>>
+# fzf (keybindings + completion)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-# <<< fzf initialization <<<
 
-# Use vi keybindings
+########################################
+# Keybindings
+########################################
 bindkey -v
 
-# Tab completion settings
-autoload -Uz compinit
-compinit
+# word navigation
+bindkey '^[^?' backward-kill-word
+bindkey '^[d' kill-word
+bindkey '^[[1;3D' backward-word
+bindkey '^[[1;3C' forward-word
+bindkey '^d' delete-char
 
-# Set completion menu with fzf-tab
+########################################
+# Completion / fzf-tab tuning
+########################################
 zstyle ':completion:*' menu select
 zstyle ':fzf-tab:*' switch-group ',' '.'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 
-# Improve history behavior
+########################################
+# History
+########################################
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -54,72 +66,113 @@ setopt append_history
 setopt hist_ignore_all_dups
 setopt share_history
 
-# Optional: quiet the Powerlevel10k instant prompt warning
+########################################
+# Safety / UX
+########################################
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-
-# Prompt to confirm before overwriting files
 setopt noclobber
 
-# Use modern LS_COLORS
-export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
+########################################
+# Environment
+########################################
+export EDITOR="nvim"
+export DIRENV_LOG_FORMAT=""
 
+########################################
+# Homebrew (Apple Silicon safe)
+########################################
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+########################################
+# PATH (deduplicated, ordered)
+########################################
+path=(
+  /opt/homebrew/opt/gcc/bin
+  $HOME/.local/bin
+  $HOME/.cargo/bin
+  $HOME/.starkli/bin
+  $HOME/.bb
+  $HOME/.opencode/bin
+  $HOME/.antigravity/antigravity/bin
+  /opt/homebrew/opt/openjdk@21/bin
+  /opt/homebrew/opt/ruby/bin
+  $path
+)
+
+export PATH
+
+########################################
+# Java
+########################################
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
+export CPPFLAGS="-I/opt/homebrew/opt/openjdk@21/include"
+
+########################################
+# PNPM
+########################################
+export PNPM_HOME="$HOME/Library/pnpm"
+path=($PNPM_HOME $path)
+
+########################################
+# Nargo
+########################################
+export NARGO_HOME="$HOME/.nargo"
+path=($NARGO_HOME/bin $path)
+
+########################################
+# ASDF
+########################################
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
+########################################
 # Aliases
-alias btop="btop --utf-force"
+########################################
 alias ls='ls --color'
-alias lg='lazygit' 
+alias lg='lazygit'
 alias python='python3'
 alias tmux='tmux -u'
+
+# zoxide navigation
 alias cd='z'
 alias cdi='zi'
 
-# Optional: use bat instead of cat if available
 if command -v bat &>/dev/null; then
   alias cat="bat"
 fi
+########################################
+# Angular completion
+########################################
+if command -v ng >/dev/null 2>&1; then
+  source <(ng completion script)
+fi
 
-# Add user-specific bin directories to path
-export PATH="/opt/homebrew/opt/gcc/bin:$PATH"
-export PATH="/usr/local/bin:$PATH"
-export CC=gcc-15
-export CXX=g++-15
+########################################
+# Scarb completion (safe)
+########################################
+if command -v scarb >/dev/null 2>&1; then
+  eval "$(scarb completions zsh)"
+fi
 
-# Enable direnv's auto `.envrc` loading
-export DIRENV_LOG_FORMAT=""
+########################################
+# Local env loaders
+########################################
+[[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
+[[ -f "$HOME/.starkli/env" ]] && . "$HOME/.starkli/env"
 
-# Editor
-export EDITOR="nvim"
+########################################
+# Colors
+########################################
+export CLICOLOR=1
+export LSCOLORS=GxFxCxDxBxegedabagaced
 
-# Optional: enable completion for system paths
-compinit -u
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+########################################
+# Powerlevel10k config (BOTTOM)
+########################################
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Option + Delete → delete one word backward
-bindkey '^[^?' backward-kill-word
+########################################
+# Secrets
+########################################
+[[ -f "$HOME/.secrets/github" ]] && source "$HOME/.secrets/github"
+export PATH="/Users/shaurya/.bb:$PATH"
 
-# Option + Fn + Delete → delete one word forward
-bindkey '^[d' kill-word
-
-bindkey '^[[1;3D' backward-word
-
-bindkey '^[[1;3C' forward-word
-
-# Fn + Delete → delete one character forward
-bindkey '^d' delete-char
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
-export CPPFLAGS="-I/opt/homebrew/opt/openjdk@21/include"
-export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/shaurya/.lmstudio/bin"
-# End of LM Studio CLI section
-
-
-
-# Load Angular CLI autocompletion.
-source <(ng completion script)

@@ -1,0 +1,24 @@
+#pragma once
+
+#include <algorithm>
+#include <array>
+#include <bitset>
+#include <cmath>
+#include <cstring>
+#include <functional>
+#include <iostream>
+#include <limits>
+#include <map>
+#include <memory>
+#include <numeric>
+#include <optional>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
+#include <variant>
+#include <vector>

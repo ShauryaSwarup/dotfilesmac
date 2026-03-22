@@ -4,13 +4,7 @@ CompileFlags:
     - -O2
     - -Wno-everything
     - -std=c++17
-    - -I/opt/homebrew/Cellar/gcc/15.1.0/bin/../lib/gcc/current/gcc/aarch64-apple-darwin24/15/../../../../../../include/c++/15
-    - -I/opt/homebrew/Cellar/gcc/15.1.0/bin/../lib/gcc/current/gcc/aarch64-apple-darwin24/15/../../../../../../include/c++/15/aarch64-apple-darwin24
-    - -I/opt/homebrew/Cellar/gcc/15.1.0/bin/../lib/gcc/current/gcc/aarch64-apple-darwin24/15/../../../../../../include/c++/15/backward
-    - -I/opt/homebrew/Cellar/gcc/15.1.0/bin/../lib/gcc/current/gcc/aarch64-apple-darwin24/15/include
-    - -I/opt/homebrew/Cellar/gcc/15.1.0/bin/../lib/gcc/current/gcc/aarch64-apple-darwin24/15/include-fixed
-    - -I/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk/usr/include
-    - -I/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk/System/Library/Frameworks
+    - -I/Users/shaurya/.config/clangd
   Remove:
     - -W*
 Index:

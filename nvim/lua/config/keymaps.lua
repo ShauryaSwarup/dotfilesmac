@@ -26,10 +26,17 @@ keymap.set("n", "<Leader>q", ":quit<Return>", opts)
 keymap.set("n", "<Leader>Q", ":qa<Return>", opts)
 
 -- root dir
--- vim.keymap.set("n", "<leader>E", "<cmd>Neotree toggle<CR>", { desc = "Explorer NeoTree (root dir)" })
+vim.keymap.set("n", "<leader>E", "<cmd>Neotree toggle<CR>", { desc = "Explorer NeoTree (root dir)" })
 
--- current dir
--- vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle dir=%:p:h<CR>", { desc = "Explorer NeoTree (cwd)" })
+-- current dir (with safety check)
+vim.keymap.set("n", "<leader>e", function()
+  local current_file = vim.fn.expand("%:p")
+  if current_file ~= "" and vim.fn.isdirectory(vim.fn.expand("%:p:h")) == 1 then
+    vim.cmd("Neotree toggle dir=" .. vim.fn.expand("%:p:h"))
+  else
+    vim.cmd("Neotree toggle")
+  end
+end, { desc = "Explorer NeoTree (cwd)" })
 
 -- File explorer with NvimTree
 -- keymap.set("n", "<Leader>f", ":NvimTreeFindFile<Return>", opts)
