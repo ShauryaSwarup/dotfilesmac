@@ -17,17 +17,20 @@ return {
       --  show hidden files by default
       filesystem = {
         follow_current_file = {
-          enabled = true,
-          leave_dirs_open = false,
+          enabled = false,
         },
         filtered_items = {
-          --visible = true,
           hide_dotfiles = false,
           hide_gitignored = false,
           never_show = { ".git" },
         },
       },
-      buffers = { follow_current_file = { enable = true } },
+      default_component_configs = {
+        indent = {
+          skip_virt_lines = true,
+        },
+      },
+      buffers = { follow_current_file = { enable = false } },
       window = {
         width = 25,
         mappings = {

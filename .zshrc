@@ -174,5 +174,3 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 # Secrets
 ########################################
 [[ -f "$HOME/.secrets/github" ]] && source "$HOME/.secrets/github"
-export PATH="/Users/shaurya/.bb:$PATH"
-

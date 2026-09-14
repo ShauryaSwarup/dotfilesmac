@@ -4,6 +4,24 @@
 local keymap = vim.keymap
 local opts = { noremap = true, silent = true }
 
+-- Do not use existing file picker
+vim.keymap.del("n", "<leader><leader>")
+vim.keymap.set("n", "<leader><leader>", function()
+  require("telescope.builtin").find_files({
+    hidden = true,
+    no_ignore = false,
+    find_command = {
+      "fd",
+      "--type",
+      "f",
+      "--hidden",
+      "--follow",
+      "--exclude",
+      "graphify-out",
+    },
+  })
+end, { desc = "Find Files (Root Dir)" })
+
 keymap.set("n", "x", '"_x')
 
 keymap.set("n", "<C-/>", "<cmd>ToggleTerm<cr>", opts)
@@ -28,8 +46,21 @@ keymap.set("n", "<Leader>Q", ":qa<Return>", opts)
 -- root dir
 vim.keymap.set("n", "<leader>E", "<cmd>Neotree toggle<CR>", { desc = "Explorer NeoTree (root dir)" })
 
+-- reveal current buffer in neotree
+vim.keymap.set("n", "<leader>fe", function()
+  local current_file = vim.fn.expand("%:p")
+  if current_file ~= "" then
+    vim.cmd("Neotree reveal " .. current_file)
+  else
+    vim.cmd("Neotree toggle")
+  end
+end, { desc = "Reveal current file in NeoTree" })
+
+-- Oil (create/rename/delete files & folders)
+keymap.set("n", "<leader>o", ":Oil<Return>", opts)
+
 -- current dir (with safety check)
-vim.keymap.set("n", "<leader>e", function()
+keymap.set("n", "<leader>e", function()
   local current_file = vim.fn.expand("%:p")
   if current_file ~= "" and vim.fn.isdirectory(vim.fn.expand("%:p:h")) == 1 then
     vim.cmd("Neotree toggle dir=" .. vim.fn.expand("%:p:h"))

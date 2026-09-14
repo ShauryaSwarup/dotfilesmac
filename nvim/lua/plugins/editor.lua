@@ -23,12 +23,21 @@ return {
           builtin.find_files({
             no_ignore = false,
             hidden = true,
+            find_command = {
+              "fd",
+              "--type",
+              "f",
+              "--hidden",
+              "--follow",
+              "--exclude",
+              "graphify-out",
+            },
           })
         end,
         desc = "Lists files in your current working directory, respects .gitignore",
       },
       {
-        ";r",
+        ";s",
         function()
           local builtin = require("telescope.builtin")
           builtin.live_grep()
@@ -36,7 +45,7 @@ return {
         desc = "Search for a string in your current working directory and get results live as you type, respects .gitignore",
       },
       {
-        "\\\\",
+        ";b",
         function()
           local builtin = require("telescope.builtin")
           builtin.buffers()
@@ -52,7 +61,7 @@ return {
         desc = "Resume the previous telescope picker",
       },
       {
-        ";e",
+        ";d",
         function()
           local builtin = require("telescope.builtin")
           builtin.diagnostics()
@@ -60,7 +69,7 @@ return {
         desc = "Lists Diagnostics for all open buffers or a specific buffer",
       },
       {
-        ";s",
+        ";v",
         function()
           local builtin = require("telescope.builtin")
           builtin.treesitter()
@@ -103,6 +112,9 @@ return {
         winblend = 0,
         mappings = {
           n = {},
+        },
+        file_ignore_patterns = {
+          "graphify%-out/",
         },
       })
       opts.pickers = vim.tbl_deep_extend("force", opts.pickers or {}, {
