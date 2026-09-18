@@ -6,13 +6,13 @@ return {
     opts = {},
   },
   {
-    "telescope.nvim",
+    "nvim-telescope/telescope.nvim",
+    version = "*",
     priority = 1000,
     dependencies = {
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
-      },
+      "nvim-lua/plenary.nvim",
+      -- optional but recommended
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
       "nvim-telescope/telescope-file-browser.nvim",
     },
     keys = {
